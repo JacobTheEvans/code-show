@@ -1,3 +1,7 @@
+.wrapper {
+  margin-right: 20px;
+}
+
 .space {
   margin-top: 15px;
 }
@@ -12,9 +16,6 @@
 }
 
 .right-box {
-  margin-right: 17px;
-  height: 90vh;
-  float: right;
 }
 
 body {
