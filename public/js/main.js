@@ -49,6 +49,13 @@ app.controller("loginController", ["$scope", "login", "$cookies", function($scop
 
 app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io,$cookies) {
   $scope.code = "";
+  var oldCode = $scope.code;
+  $scope.$watch('code', function() {
+    if($scope.code != oldCode) {
+      io.emitCode(socket,$scope.code,$cookies.get("UserToken"));
+      oldCode = $scope.code;
+    }
+  });
   $scope.messages = [];
   $scope.addMessage = function(msg) {
     var newMessages = $scope.messages;
@@ -62,7 +69,6 @@ app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io
     $scope.message = "";
   };
   $scope.setCode = function(code) {
-    $scope.code = "";
     $scope.$apply();
   };
   var socket = io.connect();
