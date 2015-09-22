@@ -70,6 +70,7 @@ io.on("connection", function(socket) {
     }
   });
   socket.on("code", function(data) {
+    console.log("Called");
     if(!data.usertoken) {
       io.sockets.connected[socket.id].emit('code', 'Must be logged in');
     } else {

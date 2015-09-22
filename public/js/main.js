@@ -63,6 +63,7 @@ app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io
   };
   $scope.setCode = function(code) {
     $scope.code = "";
+    $scope.$apply();
   };
   var socket = io.connect();
   io.getChat(socket,$scope.addMessage);
