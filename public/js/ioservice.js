@@ -17,4 +17,16 @@ app.service("io",[function() {
       onSuc(msg);
     });
   };
+  this.emitCode = function(socket,code,usertoken) {
+    var data = {
+      usertoken: usertoken,
+      code: code
+    };
+    socket.emit("code", data);
+  };
+  this.getCode = function(socket,onSuc) {
+    socket.on("code", function(code) {
+      onSuc(code);
+    });
+  };
 }]);

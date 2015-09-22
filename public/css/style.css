@@ -1,5 +1,11 @@
 .wrapper {
+  margin-top: -20px;
   margin-right: 20px;
+}
+
+.editor {
+	height: 90vh;
+  font-size: 17px !important;
 }
 
 .space {

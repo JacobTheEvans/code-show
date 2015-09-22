@@ -69,6 +69,22 @@ io.on("connection", function(socket) {
       });
     }
   });
+  socket.on("code", function(data) {
+    if(!data.usertoken) {
+      io.sockets.connected[socket.id].emit('code', 'Must be logged in');
+    } else {
+      User.findOne({token: data.usertoken}, function(err,user) {
+        if(err) {
+          io.sockets.connected[socket.id].emit('code', 'Error in user database');
+        }
+        if(user) {
+          io.emit("code", data.code);
+        } else {
+          io.sockets.connected[socket.id].emit('code', 'Must be logged in');
+        }
+      });
+    }
+  });
 });
 
 server.listen(8080);

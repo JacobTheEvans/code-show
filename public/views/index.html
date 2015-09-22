@@ -52,9 +52,10 @@
   </div>
   <div class="wrapper" ng-controller="mainController">
     <div class="row">
-      <div class="col-lg-10 col-md-10 col-sm-10">
+      <div class="col-lg-10 col-md-8 col-sm-6">
+        <div class="editor" ui-ace="{ mode: 'javascript', theme: 'chrome' }" ng-model="code"></div>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2">
+      <div class="col-lg-2 col-md-4 col-sm-6">
         <div id="mes-box" class="mes-box">
           <ul>
             <li>
@@ -74,6 +75,11 @@
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/worker-javascript.js"></script>
+  <script src="js/ui-ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/mode-javascript.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/theme-chrome.js"></script>
   <script src="https://code.angularjs.org/1.4.0/angular-cookies.min.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/ioservice.js"></script>

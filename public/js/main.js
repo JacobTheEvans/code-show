@@ -1,4 +1,4 @@
-var app = angular.module("main",["ngCookies"]);
+var app = angular.module("main",["ngCookies","ui.ace"]);
 
 app.service("login",["$http", function($http) {
   this.requestLogin = function(username,isSuc,isFail) {
@@ -48,6 +48,7 @@ app.controller("loginController", ["$scope", "login", "$cookies", function($scop
 }]);
 
 app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io,$cookies) {
+  $scope.code = "";
   $scope.messages = [];
   $scope.addMessage = function(msg) {
     var newMessages = $scope.messages;
@@ -60,6 +61,10 @@ app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io
     io.emitChat(socket,$scope.message,$cookies.get("UserToken"));
     $scope.message = "";
   };
+  $scope.setCode = function(code) {
+    $scope.code = "";
+  };
   var socket = io.connect();
   io.getChat(socket,$scope.addMessage);
+  io.getCode(socket,$scope.setCode);
 }]);
