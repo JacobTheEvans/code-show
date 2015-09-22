@@ -7,15 +7,15 @@
 }
 
 .mes-box {
+  width: 100%;
   height: 80vh;
   overflow-y: scroll;
 }
 
 .mes-box ul {
   list-style-type: none;
-}
-
-.right-box {
+  overflow-x: hidden;
+  word-wrap: break-word;
 }
 
 body {
