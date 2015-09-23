@@ -8,14 +8,27 @@
   font-size: 17px !important;
 }
 
+
 .space {
   margin-top: 15px;
 }
 
 .mes-box {
   width: 100%;
-  height: 80vh;
+  height: 83vh;
   overflow-y: scroll;
+}
+
+.mes-area {
+  border-style: solid;
+  border-color: #393939;
+  border-right: none;
+  border-bottom: none;
+  border-top: none;
+}
+
+.form-message {
+  margin-left: 20px;
 }
 
 .mes-box ul {

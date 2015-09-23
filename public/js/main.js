@@ -15,7 +15,25 @@ app.service("login",["$http", function($http) {
   };
 }]);
 
-app.controller("loginController", ["$scope", "login", "$cookies", function($scope,login,$cookies) {
+app.service("codeMemoryStore", function() {
+  var self = this;
+  this.setCode = function(code) {
+    self.code = code;
+  };
+  this.download = function() {
+    var filename = "codeshow.js";
+    var text = self.code;
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+});
+
+app.controller("loginController", ["$scope", "login", "$cookies", "codeMemoryStore", function($scope,login,$cookies,codeMemoryStore) {
   if($cookies.get("UserToken")) {
     $scope.isLoggedIn = true;
   } else {
@@ -33,6 +51,10 @@ app.controller("loginController", ["$scope", "login", "$cookies", function($scop
       $scope.isLoggedIn = true;
     }
   };
+  $scope.download = function() {
+    console.log("Called");
+    codeMemoryStore.download();
+  }
   $scope.requestFail = function(response) {
     console.log(response.data)
   };
@@ -47,13 +69,14 @@ app.controller("loginController", ["$scope", "login", "$cookies", function($scop
   };
 }]);
 
-app.controller("mainController", ["$scope", "io", "$cookies", function($scope,io,$cookies) {
+app.controller("mainController", ["$scope", "io", "$cookies", "codeMemoryStore", function($scope,io,$cookies,codeMemoryStore) {
   $scope.code = "";
   var oldCode = $scope.code;
   $scope.$watch('code', function() {
     if($scope.code != oldCode) {
       io.emitCode(socket,$scope.code,$cookies.get("UserToken"));
       oldCode = $scope.code;
+      codeMemoryStore.setCode($scope.code);
     }
   });
   $scope.messages = [];
