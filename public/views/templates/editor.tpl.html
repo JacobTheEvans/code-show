@@ -1,0 +1,27 @@
+<div class="wrapper" ng-controller="editorController">
+  <div class="row">
+    <div class="col-lg-9 col-md-8 col-sm-6">
+      <div class="editor" ui-ace="{ mode: 'javascript', theme: 'chrome' }" ng-model="code"></div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="mes-area">
+        <div id="mes-box" class="mes-box">
+          <ul>
+            <li>
+              <h4>Code Chat</h4>
+              <hr>
+            </li>
+            <li ng-repeat="mes in messages track by $index">
+              <p>{{mes}}</p>
+              <hr>
+            </li>
+          </ul>
+        </div>
+        <div class="form-message">
+          <input ng-model="message" class="form-control space">
+          <a ng-click="sendMessage()" class="form-control btn btn-warning space">Send</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
