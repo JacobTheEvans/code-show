@@ -1,4 +1,4 @@
-var app = angular.module("main.editor",["ngCookies", "ngRoute","ui.ace"]);
+var app = angular.module("main.editor",["ngCookies", "ngRoute","ui.ace","ngClipboard"]);
 
 app.config(["$routeProvider", function($routeProvider) {
   $routeProvider.when("/editor/:ind", {
@@ -7,16 +7,18 @@ app.config(["$routeProvider", function($routeProvider) {
   })
 }]);
 
+app.config(['ngClipProvider', function(ngClipProvider) {
+    ngClipProvider.setPath("//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.swf");
+}]);
+
 app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", function($scope,io,$cookies,codeMemoryStore,$routeParams) {
+  $scope.domain = "localhost:8080";
   $scope.ind = $routeParams.ind;
+  $scope.link = $scope.domain + "/#/editor/" + $scope.ind;
   $scope.code = "";
-  var oldCode = $scope.code;
   $scope.$watch('code', function() {
-    if($scope.code != oldCode) {
-      io.emitCode(socket,$scope.code,$cookies.get("UserToken"),$scope.ind);
-      oldCode = $scope.code;
-      codeMemoryStore.setCode($scope.code);
-    }
+    io.emitCode(socket,$scope.code,$cookies.get("UserToken"),$scope.ind);
+    codeMemoryStore.setCode($scope.code);
   });
   $scope.messages = [];
   $scope.addMessage = function(msg) {
@@ -31,6 +33,7 @@ app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore
     $scope.message = "";
   };
   $scope.setCode = function(code) {
+    $scope.code = code;
     $scope.$apply();
   };
   var socket = io.connect();

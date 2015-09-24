@@ -99,7 +99,14 @@ io.on("connection", function(socket) {
           io.sockets.connected[socket.id].emit('chat message', 'Server: Error in user database');
         }
         if(user) {
-          io.sockets.in(data.room).emit('chat message', user.username + ": " + data.msg);
+          Room.findOne({token: data.room},function(err,room) {
+            if(err) {
+              io.sockets.connected[socket.id].emit('chat message', 'Server: Error ' + err);
+            }
+            if(room) {
+              io.sockets.in(data.room).emit('chat message', user.username + ": " + data.msg);
+            }
+          });
         } else {
           io.sockets.connected[socket.id].emit('chat message', 'Server: Must be logged in');
         }
@@ -110,14 +117,25 @@ io.on("connection", function(socket) {
     if(!data.usertoken) {
       io.sockets.connected[socket.id].emit('code', 'Must be logged in');
     } else if(!data.room) {
-      io.sockets.connected[socket.id].emit('chat message', 'Server: Error room does not sent');
+      io.sockets.connected[socket.id].emit('chat message', 'Error room does not sent');
     } else {
       User.findOne({token: data.usertoken}, function(err,user) {
         if(err) {
           io.sockets.connected[socket.id].emit('code', 'Error in user database');
         }
         if(user) {
-          io.sockets.in(data.room).emit('code', data.code);
+          Room.findOne({token: data.room},function(err,room) {
+            if(err) {
+              io.sockets.connected[socket.id].emit('chat message', 'Server: Error ' + err);
+            }
+            if(room) {
+              if(user.username == room.owner) {
+                io.sockets.in(data.room).emit('code', data.code);
+              }
+            } else {
+              io.sockets.connected[socket.id].emit('code', 'Error in user database');
+            }
+          });
         } else {
           io.sockets.connected[socket.id].emit('code', 'Must be logged in');
         }

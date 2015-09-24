@@ -1,3 +1,30 @@
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.navbar {
+  background-color: #393939 !important;
+}
+
+.navbar-brand {
+  color: white !important;
+  font-size: 18px !important;
+}
+
+.navbar-brand a:hover {
+  color: #FF8C00 !important;
+  font-size: 19px !important;
+}
+
+.navbar a {
+  color: white !important;
+  font-size: 16px;
+}
+
+.navbar a:hover {
+  color: #FF8C00 !important;
+}
+
 .wrapper {
   margin-top: -20px;
   margin-right: 20px;
@@ -9,7 +36,7 @@
   height: 250px;
   width: 100%;
   color: white;
-  background-color: #FFC107;
+  background-color: #FF8C00;
 };
 
 .bottom-border {
@@ -63,8 +90,8 @@
 }
 
 .desc-btn:hover {
-  color: #FFC107 !important;
-  border-color: #FFC107;
+  color: #FF8C00 !important;
+  border-color: #FF8C00;
 }
 
 .desc-text {
@@ -74,7 +101,7 @@
 }
 
 .editor {
-	height: 93vh;
+	height: 86vh;
   font-size: 17px !important;
 }
 
@@ -106,33 +133,63 @@
   word-wrap: break-word;
 }
 
-body {
-  font-family: 'Ubuntu', sans-serif;
+.test-modal {
+    padding: 30px;
+    max-width: 350px;
+    width: 100% !important;
+    background-color: #F7F7F7;
+    margin: 0 auto;
+    border-radius: 2px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
-.navbar {
-  background-color: #393939 !important;
+.btn-warning {
+  background: #FF8C00 !important;
 }
 
-.navbar-brand {
-  color: white !important;
-  font-size: 18px !important;
+.btn-warning:hover {
+  background-color: #FFA333 !important;
 }
 
-.navbar-brand a:hover {
-  color: #FFC107 !important;
-  font-size: 19px !important;
+.center-m {
+  text-align: center;
 }
 
-.navbar a {
-  color: white !important;
-  font-size: 16px;
+.share-logo {
+  text-decoration: none !important;
 }
 
-.navbar a:hover {
-  color: #FFC107  !important;
+.modal-txt {
+  font-size: 19px;
 }
 
+.input-txt {
+  width: 80% !important;
+  font-size: 14px;
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  line-height: 1.42857143;
+  border-radius: 4px;
+}
+
+@media screen and (max-width: 765px) {
+  .editor {
+    height: 31vh;
+  }
+  .mes-box {
+    height: 31vh;
+  }
+  .mes-area {
+    margin-top: 20px;
+    border-style: solid;
+    border-color: #393939;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+  }
+}
 /****** LOGIN MODAL ******/
 .loginmodal-container {
   padding: 30px;

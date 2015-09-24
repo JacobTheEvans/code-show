@@ -2,13 +2,16 @@
   <div class="row">
     <div class="col-lg-9 col-md-8 col-sm-6">
       <div class="editor" ui-ace="{ mode: 'javascript', theme: 'chrome' }" ng-model="code"></div>
+      <div class="center-m">
+        <a data-toggle="modal" data-target="#myModal" class="btn btn-warning space btn-lg">Share <i class="fa fa-share"></i></a>
+      </div>
     </div>
     <div class="col-lg-3 col-md-4 col-sm-6">
       <div class="mes-area">
         <div id="mes-box" class="mes-box">
           <ul>
             <li>
-              <h4>Code Chat</h4>
+              <h4>Room Chat</h4>
               <hr>
             </li>
             <li ng-repeat="mes in messages track by $index">
@@ -18,8 +21,22 @@
           </ul>
         </div>
         <div class="form-message">
-          <input ng-model="message" class="form-control space">
+          <input ng-model="message" my-enter="sendMessage()" class="form-control space">
           <a ng-click="sendMessage()" class="form-control btn btn-warning space">Send</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content test-modal">
+        <div class="modal-header">
+          <h3 class="modal-title center">Share Your Session</h3>
+        </div>
+        <div class="modal-body center">
+          <p class="modal-txt"><a ng-href="https://twitter.com/intent/tweet?text=http://{{domain}}/%23/editor/{{ind}}" class="share-logo" target="_blank">Twitter <i class="fa fa-twitter-square"></i></a></p>
+          <p class="modal-txt">OR</p>
+          <p class="modal-txt"><a clip-copy="link"><i class="fa fa-clipboard"></i></a> <input class="input-txt" value="http://{{domain}}/#/editor/{{ind}}"></p>
         </div>
       </div>
     </div>

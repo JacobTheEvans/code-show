@@ -62,7 +62,7 @@ app.controller("loginController", ["$scope", "login", "$cookies", "codeMemorySto
     if(response.data == "Username Taken") {
       alert("Username Taken");
     } else {
-      var minutes = 30;
+      var minutes = 35;
       var date = new Date();
       var expires = new Date(date.getTime() + minutes*60000);
       $cookies.put("UserToken",response.data,{expires:expires});
@@ -91,3 +91,17 @@ app.controller("loginController", ["$scope", "login", "$cookies", "codeMemorySto
     var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
   };
 }]);
+
+app.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.myEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
