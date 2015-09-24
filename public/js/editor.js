@@ -1,13 +1,14 @@
-var app = angular.module("main.editor",["ngCookies","ui.ace"]);
+var app = angular.module("main.editor",["ngCookies", "ngRoute","ui.ace"]);
 
 app.config(["$routeProvider", function($routeProvider) {
-  $routeProvider.when("/editor", {
+  $routeProvider.when("/editor:ind", {
     templateUrl: "/views/templates/editor.tpl.html",
     controller: "editorController"
   })
 }]);
 
-app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", function($scope,io,$cookies,codeMemoryStore) {
+app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", function($scope,io,$cookies,codeMemoryStore,ngRoute) {
+  $scope.ind = $routeParams.ind;
   $scope.code = "";
   var oldCode = $scope.code;
   $scope.$watch('code', function() {
@@ -32,7 +33,7 @@ app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore
   $scope.setCode = function(code) {
     $scope.$apply();
   };
-  var socket = io.connect();
+  var socket = io.connect($scope.ind);
   io.getChat(socket,$scope.addMessage);
   io.getCode(socket,$scope.setCode);
 }]);

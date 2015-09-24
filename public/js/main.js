@@ -24,6 +24,15 @@ app.service("login",["$http", function($http) {
   };
 }]);
 
+app.service("newroom", ["$http", function($http) {
+  this.requestRoom = function(token,isSuc,isFail) {
+    var item = {
+      token: token,
+    };
+    $http.post("http://localhost:8080/newroom",item).then(isSuc,isFail);
+  };
+}]);
+
 app.service("codeMemoryStore", function() {
   var self = this;
   this.setCode = function(code) {
@@ -42,7 +51,7 @@ app.service("codeMemoryStore", function() {
   };
 });
 
-app.controller("loginController", ["$scope", "login", "$cookies", "codeMemoryStore", function($scope,login,$cookies,codeMemoryStore) {
+app.controller("loginController", ["$scope", "login", "$cookies", "codeMemoryStore", "newroom", "$location", function($scope,login,$cookies,codeMemoryStore,newroom,$location) {
   if($cookies.get("UserToken")) {
     $scope.isLoggedIn = true;
   } else {
@@ -61,7 +70,6 @@ app.controller("loginController", ["$scope", "login", "$cookies", "codeMemorySto
     }
   };
   $scope.download = function() {
-    console.log("Called");
     codeMemoryStore.download();
   }
   $scope.requestFail = function(response) {
@@ -75,5 +83,11 @@ app.controller("loginController", ["$scope", "login", "$cookies", "codeMemorySto
     login.requestLogout($cookies.get("UserToken"),$scope.requestFail,$scope.requestFail);
     $scope.isLoggedIn = false;
     $cookies.remove("UserToken");
+  };
+  $scope.redirect = function(response) {
+    $location.path("/#/editor" + response.data);
+  };
+  $scope.new = function() {
+    var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
   };
 }]);

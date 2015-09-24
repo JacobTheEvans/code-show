@@ -28,7 +28,7 @@
               <a href="#/home">Home</a>
             </li>
             <li ng-if="isLoggedIn">
-              <a data-toggle="modal" data-target="#submitModal">New</a>
+              <a ng-click="new()">New</a>
             </li>
             <li ng-if="isLoggedIn">
               <a ng-click="download()">Download</a>

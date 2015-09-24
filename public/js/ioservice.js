@@ -1,8 +1,8 @@
 var app = angular.module("main");
 
 app.service("io",[function() {
-  this.connect = function() {
-    var socket = io();
+  this.connect = function(token) {
+    var socket = io("/" + token);
     return socket;
   };
   this.emitChat = function(socket,msg,usertoken) {
