@@ -1,13 +1,17 @@
 var app = angular.module("main");
 
 app.service("io",[function() {
-  this.connect = function(token) {
-    var socket = io("/" + token);
+  this.connect = function() {
+    var socket = io();
     return socket;
   };
-  this.emitChat = function(socket,msg,usertoken) {
+  this.joinroom = function(socket,token) {
+    socket.emit("room",token);
+  }
+  this.emitChat = function(socket,msg,usertoken,roomtoken) {
     var data = {
       usertoken: usertoken,
+      room: roomtoken,
       msg: msg
     };
     socket.emit("chat message", data);
@@ -17,9 +21,10 @@ app.service("io",[function() {
       onSuc(msg);
     });
   };
-  this.emitCode = function(socket,code,usertoken) {
+  this.emitCode = function(socket,code,usertoken,roomtoken) {
     var data = {
       usertoken: usertoken,
+      room: roomtoken,
       code: code
     };
     socket.emit("code", data);

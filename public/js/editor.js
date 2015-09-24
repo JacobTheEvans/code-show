@@ -1,19 +1,19 @@
 var app = angular.module("main.editor",["ngCookies", "ngRoute","ui.ace"]);
 
 app.config(["$routeProvider", function($routeProvider) {
-  $routeProvider.when("/editor:ind", {
+  $routeProvider.when("/editor/:ind", {
     templateUrl: "/views/templates/editor.tpl.html",
     controller: "editorController"
   })
 }]);
 
-app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", function($scope,io,$cookies,codeMemoryStore,ngRoute) {
+app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", function($scope,io,$cookies,codeMemoryStore,$routeParams) {
   $scope.ind = $routeParams.ind;
   $scope.code = "";
   var oldCode = $scope.code;
   $scope.$watch('code', function() {
     if($scope.code != oldCode) {
-      io.emitCode(socket,$scope.code,$cookies.get("UserToken"));
+      io.emitCode(socket,$scope.code,$cookies.get("UserToken"),$scope.ind);
       oldCode = $scope.code;
       codeMemoryStore.setCode($scope.code);
     }
@@ -27,13 +27,14 @@ app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore
     $scope.$apply()
   };
   $scope.sendMessage = function() {
-    io.emitChat(socket,$scope.message,$cookies.get("UserToken"));
+    io.emitChat(socket,$scope.message,$cookies.get("UserToken"),$scope.ind);
     $scope.message = "";
   };
   $scope.setCode = function(code) {
     $scope.$apply();
   };
-  var socket = io.connect($scope.ind);
+  var socket = io.connect();
+  io.joinroom(socket,$scope.ind);
   io.getChat(socket,$scope.addMessage);
   io.getCode(socket,$scope.setCode);
 }]);

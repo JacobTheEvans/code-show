@@ -53,44 +53,6 @@ app.post("/login", function(req,res) {
   }
 });
 
-var ioRoom = function(newtoken) {
-  var nsp = io.of("/" + newtoken);
-  nsp.on("connection", function(socket) {
-    socket.on("chat message", function(data) {
-      if(!data.usertoken) {
-        io.sockets.connected[socket.id].emit('chat message', 'Server: Must be logged in');
-      } else {
-        User.findOne({token: data.usertoken}, function(err,user) {
-          if(err) {
-            io.sockets.connected[socket.id].emit('chat message', 'Server: Error in user database');
-          }
-          if(user) {
-            io.emit("chat message", user.username + ": " + data.msg);
-          } else {
-            io.sockets.connected[socket.id].emit('chat message', 'Server: Must be logged in');
-          }
-        });
-      }
-    });
-    socket.on("code", function(data) {
-      if(!data.usertoken) {
-        io.sockets.connected[socket.id].emit('code', 'Must be logged in');
-      } else {
-        User.findOne({token: data.usertoken}, function(err,user) {
-          if(err) {
-            io.sockets.connected[socket.id].emit('code', 'Error in user database');
-          }
-          if(user) {
-            io.emit("code", data.code);
-          } else {
-            io.sockets.connected[socket.id].emit('code', 'Must be logged in');
-          }
-        });
-      }
-    });
-  });
-};
-
 app.post("/newroom", function(req,res) {
   var pass = true;
   if(!req.body.token) {
@@ -114,14 +76,54 @@ app.post("/newroom", function(req,res) {
         newRoom.save(function(err,data) {
           if(err) {
             res.status(500).send(err);
-          } else {
-            ioRoom(newtoken);
           }
           res.status(200).send(newtoken);
         });
       }
     });
   }
+});
+
+io.on("connection", function(socket) {
+  socket.on("room", function(data) {
+    socket.join(data);
+  });
+  socket.on("chat message", function(data) {
+    if(!data.usertoken) {
+      io.sockets.connected[socket.id].emit('chat message', 'Server: Must be logged in');
+    } else if(!data.room) {
+      io.sockets.connected[socket.id].emit('chat message', 'Server: Error room does not sent');
+    } else {
+      User.findOne({token: data.usertoken}, function(err,user) {
+        if(err) {
+          io.sockets.connected[socket.id].emit('chat message', 'Server: Error in user database');
+        }
+        if(user) {
+          io.sockets.in(data.room).emit('chat message', user.username + ": " + data.msg);
+        } else {
+          io.sockets.connected[socket.id].emit('chat message', 'Server: Must be logged in');
+        }
+      });
+    }
+  });
+  socket.on("code", function(data) {
+    if(!data.usertoken) {
+      io.sockets.connected[socket.id].emit('code', 'Must be logged in');
+    } else if(!data.room) {
+      io.sockets.connected[socket.id].emit('chat message', 'Server: Error room does not sent');
+    } else {
+      User.findOne({token: data.usertoken}, function(err,user) {
+        if(err) {
+          io.sockets.connected[socket.id].emit('code', 'Error in user database');
+        }
+        if(user) {
+          io.sockets.in(data.room).emit('code', data.code);
+        } else {
+          io.sockets.connected[socket.id].emit('code', 'Must be logged in');
+        }
+      });
+    }
+  });
 });
 
 server.listen(8080);

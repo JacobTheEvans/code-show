@@ -7,6 +7,11 @@ app.config(["$routeProvider", function($routeProvider) {
   })
 }]);
 
-app.controller("homeController", ["$scope", function($scope) {
-
+app.controller("homeController", ["$scope", "newroom", "$location", "$cookies", function($scope, newroom, $location, $cookies) {
+  $scope.redirect = function(response) {
+    $location.path("/editor/" + response.data);
+  };
+  $scope.new = function() {
+    var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
+  };
 }]);

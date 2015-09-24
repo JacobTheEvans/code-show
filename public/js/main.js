@@ -85,7 +85,7 @@ app.controller("loginController", ["$scope", "login", "$cookies", "codeMemorySto
     $cookies.remove("UserToken");
   };
   $scope.redirect = function(response) {
-    $location.path("/#/editor" + response.data);
+    $location.path("/editor/" + response.data);
   };
   $scope.new = function() {
     var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
