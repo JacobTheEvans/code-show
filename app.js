@@ -53,6 +53,21 @@ app.post("/login", function(req,res) {
   }
 });
 
+app.post("/logout",function(req,res) {
+  if(!req.body.usertoken) {
+    res.send("usertoken required in JSON");
+  }
+  User.findOne({token: req.body.usertoken}, function(err, data) {
+    if(err) {
+      res.status(400).send(err);
+    }
+    if(data) {
+      data.remove();
+      data.save();
+    }
+  });
+});
+
 app.post("/newroom", function(req,res) {
   var pass = true;
   if(!req.body.token) {
@@ -78,6 +93,41 @@ app.post("/newroom", function(req,res) {
             res.status(500).send(err);
           }
           res.status(200).send(newtoken);
+        });
+      }
+    });
+  }
+});
+
+app.post("/privilege", function(req,res) {
+  var pass = true;
+  if(!req.body.token) {
+    var pass = false
+    res.status(400).send("Token must be in JSON");
+  }
+  if(!req.body.room) {
+    var pass = false;
+    res.status(400).send("Room must be in JSON");
+  }
+  if(pass) {
+    User.findOne({token: req.body.token}, function(err,user) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      if(user.length) {
+        res.status(200).send("Username not found or Expired");
+      } else {
+        Room.findOne({token: req.body.room}, function(err,room) {
+          if(err) {
+            res.status(500).send(err);
+          }
+          if(room) {
+            if(room.owner == user.username) {
+              res.status(200).send("owner");
+            } else{
+              res.status(200).send("watcher");
+            }
+          }
         });
       }
     });
@@ -117,7 +167,7 @@ io.on("connection", function(socket) {
     if(!data.usertoken) {
       io.sockets.connected[socket.id].emit('code', 'Must be logged in');
     } else if(!data.room) {
-      io.sockets.connected[socket.id].emit('chat message', 'Error room does not sent');
+      io.sockets.connected[socket.id].emit('code', 'Error room does not exist');
     } else {
       User.findOne({token: data.usertoken}, function(err,user) {
         if(err) {
@@ -126,11 +176,11 @@ io.on("connection", function(socket) {
         if(user) {
           Room.findOne({token: data.room},function(err,room) {
             if(err) {
-              io.sockets.connected[socket.id].emit('chat message', 'Server: Error ' + err);
+              io.sockets.connected[socket.id].emit('code', 'Error ' + err);
             }
             if(room) {
               if(user.username == room.owner) {
-                io.sockets.in(data.room).emit('code', data.code);
+                socket.broadcast.to(data.room).emit('code', data.code);
               }
             } else {
               io.sockets.connected[socket.id].emit('code', 'Error in user database');

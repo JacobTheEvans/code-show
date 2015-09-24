@@ -1,7 +1,7 @@
 <div class="wrapper" ng-controller="editorController">
   <div class="row">
     <div class="col-lg-9 col-md-8 col-sm-6">
-      <div class="editor" ui-ace="{ mode: 'javascript', theme: 'chrome' }" ng-model="code"></div>
+      <div class="editor" ui-ace="{ mode: 'javascript', theme: 'chrome' }" ng-model="code" ng-readonly="!priv"></div>
       <div class="center-m">
         <a data-toggle="modal" data-target="#myModal" class="btn btn-warning space btn-lg">Share <i class="fa fa-share"></i></a>
       </div>

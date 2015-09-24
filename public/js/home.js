@@ -12,6 +12,10 @@ app.controller("homeController", ["$scope", "newroom", "$location", "$cookies", 
     $location.path("/editor/" + response.data);
   };
   $scope.new = function() {
-    var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
+    if($cookies.get("UserToken")) {
+      var token = newroom.requestRoom($cookies.get("UserToken"),$scope.redirect,$scope.requestFail);
+    } else {
+      alert("Must Login To Start A New Session");
+    }
   };
 }]);

@@ -33,21 +33,35 @@ app.service("newroom", ["$http", function($http) {
   };
 }]);
 
+app.service("privilege",["$http", function($http) {
+  this.requestPriv = function(usertoken,room,isSuc,isFail) {
+    var item = {
+      token: usertoken,
+      room: room
+    };
+    $http.post("http://localhost:8080/privilege",item).then(isSuc,isFail);
+  };
+}]);
+
 app.service("codeMemoryStore", function() {
   var self = this;
   this.setCode = function(code) {
     self.code = code;
   };
   this.download = function() {
-    var filename = "codeshow.js";
-    var text = self.code;
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    if(self.code) {
+      var filename = "codeshow.js";
+      var text = self.code;
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    } else {
+      alert("No Code Present");
+    }
   };
 });
 

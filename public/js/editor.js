@@ -11,11 +11,21 @@ app.config(['ngClipProvider', function(ngClipProvider) {
     ngClipProvider.setPath("//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.swf");
 }]);
 
-app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", function($scope,io,$cookies,codeMemoryStore,$routeParams) {
+app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore", "$routeParams", "privilege", function($scope,io,$cookies,codeMemoryStore,$routeParams,privilege) {
   $scope.domain = "localhost:8080";
   $scope.ind = $routeParams.ind;
   $scope.link = $scope.domain + "/#/editor/" + $scope.ind;
   $scope.code = "";
+  $scope.setPrivilege = function(response) {
+    if(response.data == "owner") {
+      $scope.priv = true;
+    } else {
+      $scope.priv = false;
+    }
+  };
+  $scope.logError = function(response) {
+    console.log(response.data);
+  };
   $scope.$watch('code', function() {
     io.emitCode(socket,$scope.code,$cookies.get("UserToken"),$scope.ind);
     codeMemoryStore.setCode($scope.code);
@@ -40,4 +50,6 @@ app.controller("editorController", ["$scope", "io", "$cookies", "codeMemoryStore
   io.joinroom(socket,$scope.ind);
   io.getChat(socket,$scope.addMessage);
   io.getCode(socket,$scope.setCode);
+
+  privilege.requestPriv($cookies.get("UserToken"),$scope.ind,$scope.setPrivilege,$scope.logError);
 }]);
