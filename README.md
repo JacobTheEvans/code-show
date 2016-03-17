@@ -2,7 +2,7 @@
 
 What is it?
 <br>
-Show code is an online code editor. It also allows users to watch and discuss code in real time. Users are connected with unique URLs.
+Code Show is an online code editor. It also allows users to watch and discuss code in real time. Users are connected with unique URLs.
 
 What does it use?
 <br>
